@@ -4,7 +4,7 @@ pacman::p_load(tidyverse, HDInterval)
 
 # R 3.2 Probability of delay
 
-# R 3.2.1 Generative simulation
+# R 3.2.1 Generative simulation 生成数据
 sim_rides <- function(N, p){
   sample(c("L", "O"), size=N, replace=TRUE, prob=c(p, 1-p)) 
 }
@@ -12,7 +12,7 @@ sim_rides <- function(N, p){
 obs <- sim_rides(1000, 0)
 sum(obs == "L")
 
-# R 3.2.2 Statistical model (estimator)
+# R 3.2.2 Statistical model (estimator) 统计模型
 compute_post <- function(obs, poss){ 
   
   L <- sum(obs=="L") # data
@@ -29,7 +29,7 @@ data <- sim_rides(100, .1)
 sum(data=="L")
 compute_post(obs = data, poss=seq(0,1,.25))
 
-# R 3.2.3 Integrate prior knowledge
+# R 3.2.3 Integrate prior knowledge (likelihood)
 data <- c("L", "O", "L")
 prior <- compute_post(obs = data, poss=seq(0,1,.25))
 new <- compute_post(obs = "O", poss=seq(0,1,.25))
@@ -42,7 +42,7 @@ round((prior$post * new$post)/sum(prior$post * new$post), 2) # relative
 # define prior 
 poss <- tibble(theta = seq(0,1,.05), 
                prior = rep(1/length(theta),length(theta)))
-
+# The number of times the value 1/length(theta) should be repeated in order to create a vector
 
 # statistical model
 compute_post <- function(obs, poss){ 
@@ -62,10 +62,10 @@ estimation
 
 # Check results
 estimation
-estimation %>% 
+estimation %>% #pipe operator
   pivot_longer(cols = c(prior,post), names_to = "type", values_to = "probability") %>% # transform tata
   ggplot(aes(x=theta, y = probability, color = type, linetype = type)) + 
-  geom_line(size = 1) + 
+  geom_line(linewidth = 1) + 
   theme_minimal() + 
   labs(x = "Theta", 
        y = "Probability", 
